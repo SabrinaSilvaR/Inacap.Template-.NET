@@ -42,6 +42,19 @@
         "kind": "test",
         "isDefault": true
       }
+    },
+    {
+      "label": "test:performance",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "test",
+        "${workspaceFolder}/tests/FastEndpointsTemplate.PerformanceTests/FastEndpointsTemplate.PerformanceTests.csproj",
+        "--logger",
+        "console;verbosity=normal"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": "test"
     }
   ]
 }

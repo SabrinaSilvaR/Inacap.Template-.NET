@@ -31,11 +31,12 @@
 - **🩺 Observabilidad y Monitoreo**:
   - Logging estructurado de alto rendimiento con **Serilog** enriquecido por contexto.
   - Endpoint de Health Checks (`/health`) monitoreando base de datos y Redis.
-- **🧪 Suite Completa de Pruebas (19/19 Tests pasando)**:
+- **🧪 Suite Completa de Pruebas (22/22 Tests pasando)**:
   - Pruebas Unitarias de Dominio y Validadores FluentValidation (`xUnit v3` + `FluentAssertions` + `NSubstitute`).
   - Pruebas de Caché Distribuido (`CacheServiceTests`).
   - Pruebas de Integración Web con fixture en memoria (`FastEndpoints.Testing` + `WebApplicationFactory`).
   - Pruebas de Gobernanza de Arquitectura (`NetArchTest.Rules`).
+  - **Pruebas de Carga y Rendimiento (NBomber 6.x)**: Simulación de tráfico concurrente con aserciones de SLA (latencia p95 < 200ms y 0% errores).
 - **🐳 Listo para Contenedores**:
   - `Dockerfile` multi-etapa optimizado para producción.
   - `docker-compose.yml` preconfigurado con **API**, **Microsoft SQL Server 2022** y **Redis 7 (Alpine)** con comprobaciones de estado de salud (*health checks*).
@@ -85,7 +86,8 @@ template-csharp-net10-fastendpoints/
 ├── tests/
 │   ├── FastEndpointsTemplate.UnitTests/         <- Pruebas unitarias de dominio, validadores y caché
 │   ├── FastEndpointsTemplate.ArchitectureTests/ <- Pruebas de barrera de capas NetArchTest
-│   └── FastEndpointsTemplate.IntegrationTests/  <- Pruebas HTTP completas de endpoints
+│   ├── FastEndpointsTemplate.IntegrationTests/  <- Pruebas HTTP funcionales de endpoints
+│   └── FastEndpointsTemplate.PerformanceTests/  <- Pruebas de carga y SLAs de latencia (NBomber)
 ├── AGENTS.md                           <- Instrucciones maestras universales para agentes IA
 ├── CLAUDE.md                           <- Guía para Claude Code CLI
 ├── .cursorrules                        <- Reglas generales de desarrollo en Cursor
@@ -242,6 +244,28 @@ flowchart LR
 - **Claude Code**: Reglas de terminal en `CLAUDE.md`.
 - **GitHub Copilot**: Contexto de ingeniería en `.github/copilot-instructions.md`.
 - **Prompts Recetario**: Plantillas listas para copiar en `PROMPTS.md`.
+
+---
+
+## ⚡ Pruebas de Carga y Rendimiento con NBomber
+
+El proyecto cuenta con un conjunto dedicado de pruebas de carga concurrente y SLAs de latencia bajo el framework **NBomber 6.x** (`tests/FastEndpointsTemplate.PerformanceTests`):
+
+### Escenarios Evaluados:
+1. **`ListProducts_PerformanceTest`**: Evalúa la respuesta del catálogo y la aceleración provista por la caché distribuida (Redis / memoria).
+2. **`GetProductById_PerformanceTest`**: Carga concurrente sobre consultas puntuales por clave primaria.
+3. **`CreateProduct_PerformanceTest`**: Estrés sobre la persistencia concurrente en base de datos y la validación con FluentValidation.
+
+### Cómo Ejecutar las Pruebas de Rendimiento:
+```powershell
+# Ejecutar todas las pruebas de carga desde la terminal:
+dotnet test tests/FastEndpointsTemplate.PerformanceTests/FastEndpointsTemplate.PerformanceTests.csproj --logger "console;verbosity=normal"
+
+# O mediante la tarea de VS Code:
+# Presiona Ctrl+Shift+P -> Tasks: Run Task -> test:performance
+```
+
+Al finalizar la ejecución, NBomber genera métricas de percentiles (p50, p75, p95, p99), RPS y reportes exportados en carpetas `reports/perf_*` con formato interactivo **HTML** y resumen en **Markdown**.
 
 ---
 

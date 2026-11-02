@@ -27,3 +27,4 @@ obj/
 *.log
 _system_generated/
 TestResults/
+reports/
