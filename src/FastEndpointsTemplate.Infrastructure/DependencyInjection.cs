@@ -43,9 +43,27 @@ public static class DependencyInjection
 
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
-        // Health Checks
-        services.AddHealthChecks()
+        // Configuración de Caché Distribuido (Redis con fallback a memoria)
+        var redisConnectionString = configuration.GetConnectionString("Redis");
+        var healthChecks = services.AddHealthChecks()
             .AddDbContextCheck<ApplicationDbContext>(name: "database");
+
+        if (!string.IsNullOrWhiteSpace(redisConnectionString))
+        {
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = redisConnectionString;
+                options.InstanceName = "FastEndpoints:";
+            });
+
+            healthChecks.AddRedis(redisConnectionString, name: "redis", tags: ["cache", "ready"]);
+        }
+        else
+        {
+            services.AddDistributedMemoryCache();
+        }
+
+        services.AddTransient<ICacheService, CacheService>();
 
         return services;
     }

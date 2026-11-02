@@ -9,8 +9,11 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - DatabaseProvider=SqlServer
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=FastEndpointsDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;MultipleActiveResultSets=True;
+      - ConnectionStrings__Redis=redis:6379
     depends_on:
       sqlserver:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
   sqlserver:
@@ -30,5 +33,19 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
 volumes:
   mssqldata:
+  redisdata:

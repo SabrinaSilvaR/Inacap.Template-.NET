@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\FastEndpointsTemplate.Application\FastEndpointsTemplate.Application.csproj" />
     <ProjectReference Include="..\..\src\FastEndpointsTemplate.Domain\FastEndpointsTemplate.Domain.csproj" />
+    <ProjectReference Include="..\..\src\FastEndpointsTemplate.Infrastructure\FastEndpointsTemplate.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\FastEndpointsTemplate.Api\FastEndpointsTemplate.Api.csproj" />
   </ItemGroup>
 
