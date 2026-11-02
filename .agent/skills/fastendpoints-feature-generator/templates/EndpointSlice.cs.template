@@ -1,0 +1,74 @@
+using FastEndpoints;
+using FastEndpointsTemplate.Application.Common.Interfaces;
+using FastEndpointsTemplate.Domain.Entities;
+using FluentValidation;
+using Microsoft.AspNetCore.Http;
+
+namespace FastEndpointsTemplate.Api.Endpoints.{{Feature}};
+
+public sealed record {{Action}}Request(
+    string Name
+    // Add additional request properties here
+);
+
+public sealed record {{Action}}Response(
+    Guid Id,
+    string Name,
+    DateTime CreatedAtUtc
+);
+
+public sealed class {{Action}}Validator : Validator<{{Action}}Request>
+{
+    public {{Action}}Validator()
+    {
+        RuleFor(x => x.Name)
+            .NotEmpty().WithMessage("Name is required.")
+            .MaximumLength(200).WithMessage("Name cannot exceed 200 characters.");
+    }
+}
+
+public class {{Action}}Endpoint(IApplicationDbContext dbContext) 
+    : Endpoint<{{Action}}Request, {{Action}}Response>
+{
+    public override void Configure()
+    {
+        Post("/api/{{FeatureRoute}}");
+        AllowAnonymous(); // Or configure authorization policy
+        Summary(s =>
+        {
+            s.Summary = "{{SummaryDescription}}";
+            s.Description = "{{DetailedDescription}}";
+            s.Responses[201] = "Resource created successfully";
+            s.Responses[400] = "Validation or business rule failure";
+        });
+    }
+
+    public override async Task HandleAsync({{Action}}Request req, CancellationToken ct)
+    {
+        // 1. Enforce Domain invariants
+        var entityResult = {{Entity}}.Create(req.Name);
+        if (entityResult.IsFailure)
+        {
+            ThrowError(entityResult.Error.Description, StatusCodes.Status400BadRequest);
+            return;
+        }
+
+        var entity = entityResult.Value;
+
+        // 2. Persist
+        dbContext.{{Entities}}.Add(entity);
+        await dbContext.SaveChangesAsync(ct);
+
+        // 3. Return response using FastEndpoints fluent methods
+        var response = new {{Action}}Response(
+            entity.Id,
+            entity.Name,
+            entity.CreatedAtUtc
+        );
+
+        await Send.CreatedAtAsync<{{GetByIdEndpoint}}>(
+            new { id = entity.Id },
+            response,
+            cancellation: ct);
+    }
+}

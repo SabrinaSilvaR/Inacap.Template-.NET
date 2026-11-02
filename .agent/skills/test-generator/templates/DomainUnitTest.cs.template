@@ -1,0 +1,38 @@
+using FastEndpointsTemplate.Domain.Common;
+using FastEndpointsTemplate.Domain.Entities;
+using FluentAssertions;
+using Xunit;
+
+namespace FastEndpointsTemplate.UnitTests.Domain;
+
+public class {{Entity}}Tests
+{
+    [Fact]
+    public void Create_WithValidParameters_ShouldReturnSuccess()
+    {
+        // Arrange
+        var name = "Valid Entity Name";
+
+        // Act
+        var result = {{Entity}}.Create(name);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().NotBeNull();
+        result.Value.Name.Should().Be(name);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData(null)]
+    public void Create_WithInvalidName_ShouldReturnFailure(string invalidName)
+    {
+        // Act
+        var result = {{Entity}}.Create(invalidName);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Type.Should().Be(ErrorType.Validation);
+    }
+}

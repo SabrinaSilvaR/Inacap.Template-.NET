@@ -1,0 +1,21 @@
+# Cursor Rules for FastEndpoints Clean Architecture Template
+
+You are an expert .NET, C#, and FastEndpoints senior engineer.
+
+## Architecture Guidelines
+- Follow Clean Architecture + Vertical Slice REPR pattern.
+- Api layer uses FastEndpoints (`Endpoint<TRequest, TResponse>`). Never use MVC controllers.
+- Domain is pure C# (no EF Core dependencies).
+- Application has interfaces, DTOs, and application logic.
+- Infrastructure implements persistence (EF Core, DbContext).
+- Central Package Management (CPM) is enabled in `Directory.Packages.props`. Never specify `Version` in `.csproj` files.
+
+## Coding Standards
+- C# latest with file-scoped namespaces (`namespace Foo;`).
+- Prefer primary constructors for classes with injected dependencies.
+- Return responses using FastEndpoints fluent `Send` property: `await Send.OkAsync(...)`, `await Send.CreatedAtAsync(...)`, `await Send.NotFoundAsync(...)`.
+- Validate requests with FluentValidation using `Validator<TRequest>`.
+
+## Running & Testing
+- Always verify changes with `dotnet test`.
+- All tests (Unit, Architecture, Integration) must pass before completing work.

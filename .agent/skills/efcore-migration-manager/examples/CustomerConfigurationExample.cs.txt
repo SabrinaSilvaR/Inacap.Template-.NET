@@ -1,0 +1,41 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace FastEndpointsTemplate.Infrastructure.Persistence.Configurations;
+
+public class CustomerConfiguration : IEntityTypeConfiguration<CustomerExample>
+{
+    public void Configure(EntityTypeBuilder<CustomerExample> builder)
+    {
+        builder.ToTable("Customers");
+
+        builder.HasKey(c => c.Id);
+
+        builder.Property(c => c.FullName)
+            .IsRequired()
+            .HasMaxLength(150);
+
+        builder.Property(c => c.Email)
+            .IsRequired()
+            .HasMaxLength(255);
+
+        builder.HasIndex(c => c.Email)
+            .IsUnique();
+
+        builder.Property(c => c.TaxId)
+            .IsRequired()
+            .HasMaxLength(20);
+
+        builder.Property(c => c.CreatedAtUtc)
+            .IsRequired();
+    }
+}
+
+public class CustomerExample
+{
+    public Guid Id { get; set; }
+    public string FullName { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string TaxId { get; set; } = string.Empty;
+    public DateTime CreatedAtUtc { get; set; }
+}

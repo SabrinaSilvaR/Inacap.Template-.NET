@@ -1,0 +1,12 @@
+---
+description: Clean Architecture and boundary rules
+globs: src/**/*.cs
+---
+
+# Clean Architecture Boundary Rules
+
+- `Domain` layer: NO dependencies on EF Core, ASP.NET Core, or Infrastructure.
+- `Application` layer: Depends only on `Domain`.
+- `Infrastructure` layer: Implements interfaces from `Application` and configures EF Core.
+- Use Central Package Management (`Directory.Packages.props`). Never add `Version` to `.csproj`.
+- Run `dotnet test tests/FastEndpointsTemplate.ArchitectureTests` to verify compliance.

@@ -1,0 +1,51 @@
+using System.Net;
+using FastEndpoints;
+using FastEndpoints.Testing;
+using FastEndpointsTemplate.Api.Endpoints.Customers;
+using FastEndpointsTemplate.IntegrationTests.Fixtures;
+using FluentAssertions;
+using Xunit;
+
+namespace FastEndpointsTemplate.IntegrationTests.Endpoints;
+
+#pragma warning disable xUnit1051
+
+public class CustomerEndpointIntegrationTestsExample(AppFixture fixture) : TestBase<AppFixture>
+{
+    [Fact]
+    public async Task CreateCustomer_WithValidData_ShouldReturn201Created()
+    {
+        // Arrange
+        var request = new CreateCustomerRequest(
+            FullName: "Empresa Chilena SpA",
+            Email: "contacto@empresachilena.cl",
+            TaxId: "76.123.456-7"
+        );
+
+        // Act
+        var (response, result) = await fixture.Client.POSTAsync<CreateCustomerEndpoint, CreateCustomerRequest, CreateCustomerResponse>(request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        result.Should().NotBeNull();
+        result.FullName.Should().Be(request.FullName);
+        result.Email.Should().Be(request.Email);
+    }
+
+    [Fact]
+    public async Task CreateCustomer_WithInvalidEmail_ShouldReturn400BadRequest()
+    {
+        // Arrange
+        var request = new CreateCustomerRequest(
+            FullName: "Cliente Invalido",
+            Email: "correo-invalido-sin-arroba",
+            TaxId: "123"
+        );
+
+        // Act
+        var (response, _) = await fixture.Client.POSTAsync<CreateCustomerEndpoint, CreateCustomerRequest, CreateCustomerResponse>(request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+}

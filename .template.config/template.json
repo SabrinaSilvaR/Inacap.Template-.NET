@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Antigravity Senior .NET Team",
+  "classifications": [ "Web", "API", "FastEndpoints", "CleanArchitecture", "AI-Native" ],
+  "name": "FastEndpoints Clean Architecture .NET 10 Template",
+  "identity": "FastEndpointsTemplate.CSharp",
+  "shortName": "fastendpoints-ca",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "FastEndpointsTemplate",
+  "preferNameDirectory": true
+}

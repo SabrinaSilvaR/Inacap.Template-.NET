@@ -1,0 +1,13 @@
+---
+description: FastEndpoints REPR pattern rules and guidelines
+globs: src/FastEndpointsTemplate.Api/**/*.cs
+---
+
+# FastEndpoints REPR Rules
+
+- Each HTTP endpoint resides in `Endpoints/{Feature}/{Action}Endpoint.cs`.
+- Place Request, Response, Validator, and Endpoint in the same file or a cohesive feature folder.
+- Inherit from `Endpoint<TRequest, TResponse>` or `EndpointWithoutRequest<TResponse>`.
+- Use `Configure()` to set HTTP route, method, and Swagger metadata.
+- Use `await Send.OkAsync(...)`, `await Send.CreatedAtAsync(...)`, `await Send.NotFoundAsync(...)`, etc.
+- Always validate input with `Validator<TRequest>`.

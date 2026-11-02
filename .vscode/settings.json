@@ -1,0 +1,12 @@
+{
+  "dotnet.defaultSolution": "FastEndpointsTemplate.sln",
+  "editor.formatOnSave": true,
+  "dotnet.inlayHints.enableInlayHintsForParameters": true,
+  "csharp.inlayHints.enableInlayHintsForTypes": true,
+  "dotnetAcquisitionExtension.existingDotnetPath": [
+    {
+      "extensionId": "ms-dotnettools.csharp",
+      "path": "C:\\Users\\sabri\\AppData\\Local\\Microsoft\\dotnet\\dotnet.exe"
+    }
+  ]
+}

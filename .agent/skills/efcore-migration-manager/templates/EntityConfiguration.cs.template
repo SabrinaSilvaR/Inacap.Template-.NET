@@ -1,0 +1,28 @@
+using FastEndpointsTemplate.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace FastEndpointsTemplate.Infrastructure.Persistence.Configurations;
+
+public class {{Entity}}Configuration : IEntityTypeConfiguration<{{Entity}}>
+{
+    public void Configure(EntityTypeBuilder<{{Entity}}> builder)
+    {
+        builder.ToTable("{{TableName}}");
+
+        builder.HasKey(x => x.Id);
+
+        builder.Property(x => x.Name)
+            .IsRequired()
+            .HasMaxLength(200);
+
+        // SQL Server specific types
+        // builder.Property(x => x.Amount).HasPrecision(18, 2);
+
+        builder.Property(x => x.CreatedAtUtc)
+            .IsRequired();
+
+        // Important: Ignore DomainEvents so EF Core does not try to map them to columns
+        builder.Ignore(x => x.DomainEvents);
+    }
+}

@@ -1,0 +1,29 @@
+## .NET Core
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Visual Studio & VS Code
+.vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+## Rider & JetBrains
+.idea/
+*.sln.iml
+
+## SQLite local db files
+*.db
+*.db-shm
+*.db-wal
+
+## Logs & Temp
+*.log
+_system_generated/
+TestResults/

@@ -1,0 +1,47 @@
+### Variables
+@baseUrl = http://localhost:5000
+
+### 1. Health Check
+GET {{baseUrl}}/health
+Accept: application/json
+
+### 2. Crear Producto (Válido - 201 Created)
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Teclado Mecánico RGB Pro",
+  "sku": "KB-MEC-001",
+  "description": "Switch red lineal para gaming y programación",
+  "price": 119.99,
+  "stockQuantity": 45
+}
+
+### 3. Crear Producto (Inválido - 400 Bad Request ProblemDetails)
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "name": "",
+  "sku": "",
+  "description": "Datos inválidos para probar FluentValidation",
+  "price": -10.0,
+  "stockQuantity": -5
+}
+
+### 4. Listar Productos Paginados (GET /api/products)
+GET {{baseUrl}}/api/products?page=1&pageSize=10
+Accept: application/json
+
+### 5. Buscar Productos por Texto o SKU
+GET {{baseUrl}}/api/products?search=Teclado&page=1&pageSize=5
+Accept: application/json
+
+### 6. Consultar Producto por ID
+# Reemplaza el GUID con el Id devuelto al crear un producto
+@productId = 00000000-0000-0000-0000-000000000000
+GET {{baseUrl}}/api/products/{{productId}}
+Accept: application/json
+
+### 7. Desactivar Producto (DELETE - Soft Delete)
+DELETE {{baseUrl}}/api/products/{{productId}}

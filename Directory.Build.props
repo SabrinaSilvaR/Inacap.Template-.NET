@@ -1,0 +1,24 @@
+<Project>
+  <PropertyGroup>
+    <!--
+      .NET 10 Ready Configuration:
+      Para cambiar a .NET 10 cuando tengas el SDK 10 instalado, cambia <DefaultTargetFramework> a net10.0
+      o ejecuta: dotnet build -p:TargetFrameworkOverride=net10.0
+    -->
+    <DefaultTargetFramework>net10.0</DefaultTargetFramework>
+    <TargetFramework Condition="'$(TargetFrameworkOverride)' != ''">$(TargetFrameworkOverride)</TargetFramework>
+    <TargetFramework Condition="'$(TargetFrameworkOverride)' == ''">$(DefaultTargetFramework)</TargetFramework>
+
+    <!-- .NET 10 VSTest Runner Compatibility -->
+    <IsTestingPlatformApplication>false</IsTestingPlatformApplication>
+    <NoWarn>$(NoWarn);NU1903;NU1902</NoWarn>
+
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+</Project>

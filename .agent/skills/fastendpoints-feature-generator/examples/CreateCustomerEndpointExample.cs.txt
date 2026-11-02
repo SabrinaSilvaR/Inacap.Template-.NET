@@ -1,0 +1,78 @@
+using FastEndpoints;
+using FastEndpointsTemplate.Application.Common.Interfaces;
+using FastEndpointsTemplate.Domain.Common;
+using FluentValidation;
+using Microsoft.AspNetCore.Http;
+
+namespace FastEndpointsTemplate.Api.Endpoints.Customers;
+
+// Request DTO
+public sealed record CreateCustomerRequest(
+    string FullName,
+    string Email,
+    string TaxId
+);
+
+// Response DTO
+public sealed record CreateCustomerResponse(
+    Guid Id,
+    string FullName,
+    string Email,
+    string TaxId,
+    DateTime CreatedAtUtc
+);
+
+// Validator with FluentValidation
+public sealed class CreateCustomerValidator : Validator<CreateCustomerRequest>
+{
+    public CreateCustomerValidator()
+    {
+        RuleFor(x => x.FullName)
+            .NotEmpty().WithMessage("El nombre completo es obligatorio.")
+            .MaximumLength(150).WithMessage("El nombre no puede exceder 150 caracteres.");
+
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("El correo electrónico es obligatorio.")
+            .EmailAddress().WithMessage("El formato del correo electrónico no es válido.");
+
+        RuleFor(x => x.TaxId)
+            .NotEmpty().WithMessage("El RUT / TaxId es obligatorio.");
+    }
+}
+
+// FastEndpoints Endpoint Handler
+public class CreateCustomerEndpoint(IApplicationDbContext dbContext) 
+    : Endpoint<CreateCustomerRequest, CreateCustomerResponse>
+{
+    public override void Configure()
+    {
+        Post("/api/customers");
+        AllowAnonymous();
+        Summary(s =>
+        {
+            s.Summary = "Registrar nuevo cliente";
+            s.Description = "Crea un cliente corporativo validando formato de email e invariantes de negocio.";
+            s.Responses[201] = "Cliente registrado con éxito";
+            s.Responses[400] = "Error en las validaciones de entrada";
+        });
+    }
+
+    public override async Task HandleAsync(CreateCustomerRequest req, CancellationToken ct)
+    {
+        // Ejemplo de validación o instanciación de dominio
+        var customerId = Guid.NewGuid();
+        var createdAtUtc = DateTime.UtcNow;
+
+        // await dbContext.SaveChangesAsync(ct);
+
+        var response = new CreateCustomerResponse(
+            customerId,
+            req.FullName,
+            req.Email,
+            req.TaxId,
+            createdAtUtc
+        );
+
+        await Send.OkAsync(response, ct);
+    }
+}

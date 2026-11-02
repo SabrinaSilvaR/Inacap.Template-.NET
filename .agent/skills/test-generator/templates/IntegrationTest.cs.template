@@ -1,0 +1,46 @@
+using System.Net;
+using FastEndpoints;
+using FastEndpoints.Testing;
+using FastEndpointsTemplate.Api.Endpoints.{{Feature}};
+using FastEndpointsTemplate.IntegrationTests.Fixtures;
+using FluentAssertions;
+using Xunit;
+
+namespace FastEndpointsTemplate.IntegrationTests.Endpoints;
+
+#pragma warning disable xUnit1051
+
+public class {{Action}}EndpointTests(AppFixture fixture) : TestBase<AppFixture>
+{
+    [Fact]
+    public async Task {{Action}}_WithValidData_ShouldReturn201Created()
+    {
+        // Arrange
+        var request = new {{Action}}Request(
+            Name: "Valid Test Name"
+        );
+
+        // Act
+        var (response, result) = await fixture.Client.POSTAsync<{{Action}}Endpoint, {{Action}}Request, {{Action}}Response>(request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        result.Should().NotBeNull();
+        result.Id.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task {{Action}}_WithInvalidData_ShouldReturn400BadRequest()
+    {
+        // Arrange
+        var request = new {{Action}}Request(
+            Name: "" // Invalid empty name
+        );
+
+        // Act
+        var (response, _) = await fixture.Client.POSTAsync<{{Action}}Endpoint, {{Action}}Request, {{Action}}Response>(request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+}
